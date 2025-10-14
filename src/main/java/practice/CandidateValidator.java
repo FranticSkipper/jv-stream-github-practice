@@ -1,10 +1,12 @@
 package practice;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
 import model.Candidate;
 
 public class CandidateValidator implements Predicate<Candidate> {
-    private static final String PERIOD_SEPARATOR = "-";
+    private static final String PERIODS_SEPARATOR = ",";
+    private static final String YEAR_SEPARATOR = "-";
     private static final int FROM_YEAR = 0;
     private static final int TO_YEAR = 1;
     private static final int MIN_AGE = 35;
@@ -20,7 +22,15 @@ public class CandidateValidator implements Predicate<Candidate> {
     }
 
     private int getPeriodInUkr(String period) {
-        String[] values = period.split(PERIOD_SEPARATOR);
-        return Integer.parseInt(values[TO_YEAR]) - Integer.parseInt(values[FROM_YEAR]);
+        if (period == null || period.trim().isEmpty()) {
+            return 0;
+        }
+
+        return Arrays.stream(period.split(PERIODS_SEPARATOR))
+                .mapToInt(p -> {
+                    String[] values = p.trim().split(YEAR_SEPARATOR);
+                    return Integer.parseInt(values[TO_YEAR]) - Integer.parseInt(values[FROM_YEAR]);
+                })
+                .sum();
     }
 }
