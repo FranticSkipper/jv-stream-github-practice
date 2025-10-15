@@ -29,7 +29,19 @@ public class CandidateValidator implements Predicate<Candidate> {
         return Arrays.stream(period.split(PERIODS_SEPARATOR))
                 .mapToInt(p -> {
                     String[] values = p.trim().split(YEAR_SEPARATOR);
-                    return Integer.parseInt(values[TO_YEAR]) - Integer.parseInt(values[FROM_YEAR]);
+
+                    if (values.length != 2) {
+                        return 0;
+                    }
+
+                    String from = values[FROM_YEAR].trim();
+                    String to = values[TO_YEAR].trim();
+
+                    if (from.isEmpty() || to.isEmpty()) {
+                        return 0;
+                    }
+
+                    return Integer.parseInt(to) - Integer.parseInt(from);
                 })
                 .sum();
     }
